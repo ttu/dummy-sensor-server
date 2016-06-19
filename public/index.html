@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>XXX</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Messages</h2>
+            </div>
+            <div class="col-md-6">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label for="deviceId">Sensor ID</label>
+                        <input type="text" class="form-control" id="deviceId" value="iddqd" placeholder="your device id" width="25%">
+                    </div>
+                    <button id="listen" class="btn btn-large btn-success"> ON </button>
+                    <button id="stop" class="btn btn-large btn-danger"> OFF </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="padding-top: 40px">
+            <div class="col-md-12">
+                <h2>Displaying Data</h2>
+                <div id="graph"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js"></script>
+    <script src="https:/code.jquery.com/jquery-3.0.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.js"></script>
+    <script src="chart.js"></script>
+
+    <script>
+
+    const subscriptions = new Map();
+    const socket = io();
+
+    socket.on('listen', sensorId => {
+        // Use Rx to buffer events and reduce to one item
+        const subject = Rx.Observable.fromEvent(socket, sensorId)
+        .bufferWithTime(1000)
+        .map(data => {
+            return {
+                id: sensorId,
+                timestamp: data[data.length - 1].timestamp,
+                data: data.reduce((agg, cur) => agg + cur.data, 0) / data.length
+            }
+        });
+
+        const subscription = subject.subscribe(value => {
+            chart.handleChart(value);
+        });
+
+        subscriptions.set(sensorId, subscription);
+    });
+
+    socket.on('stop', sensorId => {
+        socket.off(sensorId);
+        
+        const subs = subscriptions.get(sensorId);
+        subs.dispose();
+        subscriptions.delete(sensorId);
+
+        chart.removeChartValues(sensorId);
+    });
+
+    $(document).ready(() => { 
+
+        $.get('/sensor').then(d => {
+            console.log(d);
+        });
+
+        $('#listen').click(() => {
+            var sensorId = $('#deviceId').val();
+            socket.emit('listen', sensorId);
+        });
+
+        $('#stop').click(() => {
+            var sensorId = $('#deviceId').val();
+            socket.emit('stop', sensorId);
+        })
+    });
+</script>
+</body>
+
+</html>
