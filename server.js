@@ -24,9 +24,8 @@ const sensors = new Sensors((data) => {
 // Add default sensors
 sensors.addSensor('acdc1');
 sensors.addSensor('abba5');
-sensors.addSensor('iddqd');
-sensors.addSensor('idkfa');
-
+sensors.addSensor('iddqd', { initial: 24, min: 18, max: 28, updateValue: 0.002 });
+sensors.addSensor('idkfa', { initial: 22, min: 17, max: 26, updateValue: 0.003 });
 
 app.get('/', (req, res) => {
   res.send('Hello from sensors world');

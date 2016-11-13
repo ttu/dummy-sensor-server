@@ -8,7 +8,7 @@ class SensorsProcess {
 
         process.on('message', msg => {
             if (msg.func === 'add') {
-                this.addSensor(msg.params);
+                this.addSensor(msg.id, msg.settings);
             }
         });
 
@@ -19,10 +19,10 @@ class SensorsProcess {
         }, 300);
     }
 
-    addSensor(id) {
+    addSensor(id, settings) {
         if (!this.sensors.some(s => s.id === id)) {
             const key = (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(0, 5).toLocaleLowerCase();
-            const newSensor = new SensorModel(id, key);
+            const newSensor = new SensorModel(id, key, settings);
             this.sensors.push(newSensor);
             process.send({ func: 'add', payload: newSensor.toJsonWithKey() });
         }

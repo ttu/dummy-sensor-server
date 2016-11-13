@@ -3,13 +3,13 @@
 Provides random data
 
 * server
- * Express REST API & Socket.io server
+  * Express REST API & Socket.io server
 * sensors
- * BL, starts new background process and keeps track of active sensors
+  * BL, starts new background process and keeps track of active sensors
 * sensorProcess
- * Background process which updates sensor's data periodically
+  * Background process which updates sensor's data periodically
 * sensorModel.js
- * Model for sensor
+  * Model for sensor
 
 ### REST API
 ```
@@ -30,9 +30,9 @@ GET /sensor/abba5
 
 Listen for events
 * listen (expected payload: sensorId)
- * replies with sensorId if sensor is found
+  * replies with sensorId if sensor is found
 * stop (expected payload: sensorId)
- * replies with sensorId if sensor is fond
+  * replies with sensorId if sensor is fond
 
 When sensor has updated data emit message with sensor's id 
 

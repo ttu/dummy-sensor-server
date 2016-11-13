@@ -3,23 +3,30 @@
 //const data = { id: 'XXX', timestamp: '12-12-12', data: 25};
 
 class SensorModel {
-    constructor(id, key) {
+    constructor(id, key, settings) {
         this.myId = id;
         this.timestamp = Date.now();
-        this.data = 25;
+        this.data = settings.initial;
         this.myKey = key;
+
+        this.updateValue = settings.updateValue;
+        this.minValue = settings.min;
+        this.maxValue = settings.max;
     }
 
     get id() { return this.myId; }
     get key() { return this.myKey; }
 
-    // Update value of data up or down max 0.02 degrees for every 100ms
+    // Update value of data up or down max this.updateValue degrees for every 100ms
     countNewValue(data, time, newTime) {
         let diff = newTime - time;
         let maxLoops = 10; // Lets not try to kill this, so X amount data changes is enough to randomize
+
         while (diff > 99 || maxLoops > 0) {
-            var plusOrMinus = Math.random() < 0.5 ? -1 : 1;
-            data += Math.random() * 0.02 * plusOrMinus;
+            const plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+            const newValue = Math.random() * this.updateValue * plusOrMinus;
+            const newData = data + newValue;
+            data = newData <= this.maxValue && newData >= this.minValue ? newData : data - newValue;
             diff -= 100;
             maxLoops -= 1;
         }
