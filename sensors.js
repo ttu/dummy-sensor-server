@@ -23,7 +23,7 @@ class Sensors {
     }
 
     addSensor(id, settings = { initial: 24, min: 18, max: 30, updateValue: 0.002 }) {
-        id = id != undefined ? id : (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(0, 5).toLocaleLowerCase();
+        id = id !== undefined ? id : (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(0, 5).toLocaleLowerCase();
 
         return new Promise((resolve, reject) => {
             this.worker_process.send({ func: 'add', id: id, settings: settings });
@@ -41,7 +41,7 @@ class Sensors {
 
                 if ((maxWait -= waitTime) < 0) {
                     clearInterval(runningInterval);
-                    reject();
+                    reject(id);
                 }
             }, waitTime);
         });

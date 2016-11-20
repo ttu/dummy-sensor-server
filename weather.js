@@ -2,7 +2,7 @@
 
 const request = require('superagent');
 
-class DataService {
+class DataWrapper {
     constructor(dataProvider) {
         this.storedData;
         this.provider = dataProvider;
@@ -51,4 +51,4 @@ class DarkSkyWeatherProvider {
     }
 }
 
-module.exports = { service: DataService, provider: DarkSkyWeatherProvider };
+module.exports = { wrapper: DataWrapper, provider: DarkSkyWeatherProvider };

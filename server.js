@@ -9,7 +9,7 @@ const socketio = require('socket.io');
 const Sensors = require('./sensors');
 
 const WeatherProvider = require('./weather').provider;
-const DataService = require('./weather').service;
+const DataWrapper = require('./weather').wrapper;
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -50,10 +50,14 @@ const darkSkyApiKey = process.env.DARKSKY_API_KEY;
 
 if (darkSkyApiKey) {
   const weatherProvider = new WeatherProvider(darkSkyApiKey);
-  const dataService = new DataService(weatherProvider);
+  const weather = new DataWrapper(weatherProvider);
 
   app.get('/weather', (req, res) => {
-    res.send(dataService.data);
+    // Simulate slow response
+    const timeOut = Math.random() * 10000;
+    setTimeout(() => {
+      res.send(weather.data);
+    }, timeOut);
   });
 }
 
