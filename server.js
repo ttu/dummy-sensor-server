@@ -8,6 +8,9 @@ const socketio = require('socket.io');
 
 const Sensors = require('./sensors');
 
+const WeatherProvider = require('./weather').provider;
+const DataService = require('./weather').service;
+
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(morgan('combined'));
@@ -42,6 +45,17 @@ app.get('/sensor/:sensor_id', (req, res) => {
   else
     res.sendStatus(404);
 });
+
+const darkSkyApiKey = process.env.DARKSKY_API_KEY;
+
+if (darkSkyApiKey) {
+  const weatherProvider = new WeatherProvider(darkSkyApiKey);
+  const dataService = new DataService(weatherProvider);
+
+  app.get('/weather', (req, res) => {
+    res.send(dataService.data);
+  });
+}
 
 // TODO: Adding needs also a checker which removes inactive sensors
 // app.post('/sensor', (req, res) => {
