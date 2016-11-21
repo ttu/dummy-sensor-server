@@ -30,15 +30,15 @@ sensors.addSensor('abba5');
 sensors.addSensor('iddqd', { initial: 24, min: 18, max: 28, updateValue: 0.002 });
 sensors.addSensor('idkfa', { initial: 22, min: 17, max: 26, updateValue: 0.003 });
 
-app.get('/', (req, res) => {
+app.get('/api/', (req, res) => {
   res.send('Hello from sensors world');
 });
 
-app.get('/sensor', (req, res) => {
+app.get('/api/sensor', (req, res) => {
   res.send(sensors.getSensorsIds());
 });
 
-app.get('/sensor/:sensor_id', (req, res) => {
+app.get('/api/sensor/:sensor_id', (req, res) => {
   const data = sensors.getSensorJson(req.params.sensor_id);
   if (data !== null)
     res.send(data);
@@ -52,7 +52,7 @@ if (darkSkyApiKey) {
   const weatherProvider = new WeatherProvider(darkSkyApiKey);
   const weather = new DataWrapper(weatherProvider);
 
-  app.get('/weather', (req, res) => {
+  app.get('/api/weather', (req, res) => {
     // Simulate slow response
     const timeOut = Math.random() * 10000;
     setTimeout(() => {
@@ -62,7 +62,7 @@ if (darkSkyApiKey) {
 }
 
 // TODO: Adding needs also a checker which removes inactive sensors
-// app.post('/sensor', (req, res) => {
+// app.post('/api/sensor', (req, res) => {
 //   return sensors.addSensor().then(sensor => {
 //     res.status(200).send(sensor);
 //   });
