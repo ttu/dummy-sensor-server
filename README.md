@@ -8,21 +8,33 @@ Provides random data
   * BL, starts new background process and keeps track of active sensors
 * sensorProcess
   * Background process which updates sensor's data periodically
-* sensorModel.js
+* sensorModel
   * Model for sensor
+* weather
+  * Get weather data periodically from Darksky API
 
 ### REST API
 ```
-GET /sensor
+GET /api/sensor
 >
 ["acdc1","abba5","iddqd","idkfa"]
 
-GET /sensor/abba5
+GET /api/sensor/abba5
 >
 { 
-    'id': 'abba5'
-    'data': 24.940641212025657
+    'id': 'abba5',
+    'data': 24.940641212025657,
     'timestamp': 1466322901825
+}
+
+GET /api/weather
+>
+{ 
+    'latitude': 60.192059,
+    'longitude': 24.945831,    
+    'time': 1479744195,
+    'temperature': 7.12,
+    'units': 'si'
 }
 ```
 

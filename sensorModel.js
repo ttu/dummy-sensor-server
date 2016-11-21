@@ -1,14 +1,11 @@
 'use strict';
 
-//const data = { id: 'XXX', timestamp: '12-12-12', data: 25};
-
 class SensorModel {
     constructor(id, key, settings) {
         this.myId = id;
         this.timestamp = Date.now();
         this.data = settings.initial;
         this.myKey = key;
-
         this.updateValue = settings.updateValue;
         this.minValue = settings.min;
         this.maxValue = settings.max;
@@ -31,7 +28,7 @@ class SensorModel {
             maxLoops -= 1;
         }
 
-        return data
+        return data;
     }
 
     updateData() {

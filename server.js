@@ -76,14 +76,14 @@ io.on('connection', (socket) => {
     sensors.stopListenSensorAll(socket.id);
   });
 
-  socket.on('listen', function (msg) {
+  socket.on('listen', (msg) => {
     console.log(`listen event ${msg}`);
     var found = sensors.listenSensor(socket.id, msg);
     if (found)
       socket.emit('listen', msg);
   });
 
-  socket.on('stop', function (msg) {
+  socket.on('stop', (msg) => {
     var found = sensors.stopListenSensor(socket.id, msg);
     if (found)
       socket.emit('stop', msg);
