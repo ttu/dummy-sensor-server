@@ -49,12 +49,13 @@ app.get('/api/sensor/:sensor_id', (req, res) => {
 const darkSkyApiKey = process.env.DARKSKY_API_KEY;
 
 if (darkSkyApiKey) {
+  const maxDelay = process.env.WEATHER_DELAY || 4000;
   const weatherProvider = new WeatherProvider(darkSkyApiKey);
   const weather = new DataWrapper(weatherProvider);
 
   app.get('/api/weather', (req, res) => {
     // Simulate slow response
-    const timeOut = Math.random() * 10000;
+    const timeOut = Math.random() * maxDelay;
     setTimeout(() => {
       res.send(weather.data);
     }, timeOut);
