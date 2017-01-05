@@ -2,17 +2,19 @@
 
 const http = require('http');
 const express = require('express');
+var cors = require('cors')
 const morgan = require('morgan');
 const jsonMiddleware = require('json-middleware');
 const socketio = require('socket.io');
 
 const Sensors = require('./sensors');
-
 const WeatherProvider = require('./weather').provider;
 const DataWrapper = require('./weather').wrapper;
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(cors());
 app.use(morgan('combined'));
 app.use(jsonMiddleware.middleware());
 app.use(express.static('public'));
