@@ -29,71 +29,70 @@
         </div>
 
         <div class="row" style="padding-top: 40px">
-            <div class="col-md-12">
-                <h2>Displaying Data</h2>
-                <div id="graph"></div>
-            </div>
-        </div>
-    </div>
+<div class="col-md-12">
+    <h2>Displaying Data</h2>
+    <div id="graph"></div>
+</div>
+</div>
+</div>
 
-    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js"></script>
-    <script src="https:/code.jquery.com/jquery-3.0.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.js"></script>
-    <script src="chart.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js"></script>
+<script src="https:/code.jquery.com/jquery-3.0.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.js"></script>
+<script src="chart.js"></script>
 
-    <script>
+<script>
 
-    const subscriptions = new Map();
-    const socket = io();
+        const subscriptions = new Map();
+        const socket = io();
 
-    socket.on('listen', sensorId => {
-        // Use Rx to buffer events and reduce to one item
-        const subject = Rx.Observable.fromEvent(socket, sensorId)
-        .bufferWithTime(1000)
-        .map(data => {
-            return {
-                id: sensorId,
-                timestamp: data[data.length - 1].timestamp,
-                data: data.reduce((agg, cur) => agg + cur.data, 0) / data.length
-            }
+        socket.on('listen', sensorId => {
+            // Use Rx to buffer events and reduce to one item
+            const subject = Rx.Observable.fromEvent(socket, sensorId)
+                .bufferWithTime(1000)
+                .map(data => {
+                    return {
+                        id: sensorId,
+                        timestamp: data[data.length - 1].timestamp,
+                        data: data.reduce((agg, cur) => agg + cur.data, 0) / data.length
+                    }
+                });
+
+            const subscription = subject.subscribe(value => {
+                chart.handleChart(value);
+            });
+
+            subscriptions.set(sensorId, subscription);
         });
 
-        const subscription = subject.subscribe(value => {
-            chart.handleChart(value);
+        socket.on('stop', sensorId => {
+            socket.off(sensorId);
+
+            const subs = subscriptions.get(sensorId);
+            subs.dispose();
+            subscriptions.delete(sensorId);
+
+            chart.removeChartValues(sensorId);
         });
 
-        subscriptions.set(sensorId, subscription);
-    });
+        $(document).ready(() => {
+            $.get('/api/sensor').then(d => {
+                console.log(d);
+            });
 
-    socket.on('stop', sensorId => {
-        socket.off(sensorId);
-        
-        const subs = subscriptions.get(sensorId);
-        subs.dispose();
-        subscriptions.delete(sensorId);
+            $('#listen').click(() => {
+                var sensorId = $('#deviceId').val();
+                socket.emit('listen', sensorId);
+            });
 
-        chart.removeChartValues(sensorId);
-    });
-
-    $(document).ready(() => { 
-
-        $.get('/api/sensor').then(d => {
-            console.log(d);
+            $('#stop').click(() => {
+                var sensorId = $('#deviceId').val();
+                socket.emit('stop', sensorId);
+            });
         });
-
-        $('#listen').click(() => {
-            var sensorId = $('#deviceId').val();
-            socket.emit('listen', sensorId);
-        });
-
-        $('#stop').click(() => {
-            var sensorId = $('#deviceId').val();
-            socket.emit('stop', sensorId);
-        })
-    });
-</script>
+    </script>
 </body>
 
 </html>

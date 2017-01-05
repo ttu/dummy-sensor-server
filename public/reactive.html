@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+
+<body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/2.3.0/superagent.min.js"></script>
+
+    <script>
+
+        const request = window.superagent;
+
+        class ReactiveService {
+            constructor() {
+                this.subject = new Rx.Subject();
+
+                setInterval(() => {
+                    request
+                        .get('http://dummy-sensors.azurewebsites.net/api/sensor/iddqd')
+                        .end((err, resp) => {
+                            this.subject.onNext(resp.body);
+                        });
+                }, 2000);
+            }
+        }
+
+        var rxService = new ReactiveService();
+
+        rxService.subject.subscribe(data => {
+            console.log(data);
+        });
+
+    </script>
+</body>
+
+</html>
