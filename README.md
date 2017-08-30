@@ -1,6 +1,6 @@
 # Dummy Sensor Server
 
-Provides random data
+Provides random sensor-like data
 
 * server
   * Express REST API & Socket.io server

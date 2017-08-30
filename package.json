@@ -1,13 +1,13 @@
 {
   "name": "dummy-sensor-server",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Server which provides random data",
   "engines": {
     "node": ">6.0.0"
   },
-  "main": "server.js",
+  "main": "./src/server.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "eslint src && nodemon ./src/server.js",
     "test": "mocha"
   },
   "author": "Tomi Tuhkanen",

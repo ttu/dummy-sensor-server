@@ -36,4 +36,4 @@ class SensorsProcess {
     }
 }
 
-const sensorsProcess = new SensorsProcess();
+const sensorsProcess = new SensorsProcess(); // eslint-disable-line no-unused-vars

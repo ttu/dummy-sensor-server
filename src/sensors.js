@@ -82,7 +82,7 @@ class Sensors {
     stopListenSensorAll(clientId) {
         var sensors = this.listeners.filter(s => s.client === clientId);
         sensors.forEach(s => {
-            this.listeners.pop(sensors);
+            this.listeners.pop(s);
         });
     }
 }

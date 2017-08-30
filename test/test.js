@@ -1,8 +1,8 @@
 'use strict';
 
 const assert = require('chai').assert;
-const SensorModel = require('./sensorModel');
-const Sensors = require('./sensors');
+const SensorModel = require('../src/sensorModel');
+const Sensors = require('../src/sensors');
 
 const settings = { initial: 25, min: 18, max: 30, updateValue: 0.002 };
 
