@@ -9,7 +9,9 @@ const socketio = require('socket.io');
 
 const Sensors = require('./sensors');
 const WeatherProvider = require('./weather').provider;
-const DataWrapper = require('./weather').wrapper;
+const WeatherDataWrapper = require('./weather').wrapper;
+
+import * as superagent from 'superagent';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,7 +21,7 @@ app.use(morgan('combined'));
 app.use(jsonMiddleware.middleware());
 app.use(express.static('public'));
 
-const server = http.Server(app);
+const server = http.createServer(app);
 const io = socketio(server);
 
 const sensors = new Sensors((data) => {
@@ -51,9 +53,9 @@ app.get('/api/sensor/:sensor_id', (req, res) => {
 const darkSkyApiKey = process.env.DARKSKY_API_KEY;
 
 if (darkSkyApiKey) {
-  const maxDelay = process.env.WEATHER_DELAY || 4000;
+  const maxDelay : any = process.env.WEATHER_DELAY || 4000;
   const weatherProvider = new WeatherProvider(darkSkyApiKey);
-  const weather = new DataWrapper(weatherProvider);
+  const weather = new WeatherDataWrapper(weatherProvider);
 
   app.get('/api/weather', (req, res) => {
     // Simulate slow response
@@ -96,4 +98,13 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
   console.log(`Server started on port ${server.address().port}`);
 });
+
+async function loadTest() {
+  const r1 = await superagent.get('http://localhost:3000/api/weather');
+  console.log(r1.body);
+  const r2 = await superagent.get('http://localhost:3000/api/sensor/acdc1');
+  console.log(r2.body);
+};
+
+setTimeout(() => loadTest(), 2000);
 

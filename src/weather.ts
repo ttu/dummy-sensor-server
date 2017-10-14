@@ -1,14 +1,14 @@
 'use strict';
 
-const request = require('superagent');
+import * as request from 'superagent';
 
 class DataWrapper {
-    constructor(dataProvider) {
-        this.storedData;
-        this.provider = dataProvider;
-
-        this.updateData = () => {
-            this.provider.getData()
+    storedData: any;
+    
+    constructor(dataProvider : DataProvider) {
+        const provider = dataProvider;
+        const updateData = () => {
+            provider.getData()
                 .then(data => {
                     this.storedData = data;
                 }).catch(err => {
@@ -16,21 +16,28 @@ class DataWrapper {
                 });
         };
 
-        this.updateData();
-        setInterval(this.updateData, 5 * 60 * 1000);
+        updateData();
+        setInterval(updateData, 5 * 60);
     }
 
-    get data() { return this.storedData; }
+    get data() : any { return this.storedData; }
+}
+
+interface DataProvider {
+    getData: () => Promise<any>;
 }
 
 class DarkSkyWeatherProvider {
-    constructor(apikey) {
+    readonly url: string;
+    readonly units: string;
+
+    constructor(apikey : string) {
         const helsinki = { lat: 60.192059, lon: 24.945831 };
         this.units = 'si';
         this.url = `https://api.darksky.net/forecast/${apikey}/${helsinki.lat},${helsinki.lon}?units=${this.units}`;
     }
 
-    getData() {
+    getData() : Promise<any> {
         return new Promise((resolve, reject) => {
             request
                 .get(this.url)
