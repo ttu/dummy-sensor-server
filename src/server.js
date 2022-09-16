@@ -42,7 +42,7 @@ app.get('/api/sensor', (req, res) => {
 
 app.get('/api/sensor/:sensor_id', (req, res) => {
   const data = sensors.getSensorJson(req.params.sensor_id);
-  if (data !== null)
+  if (data)
     res.send(data);
   else
     res.sendStatus(404);
