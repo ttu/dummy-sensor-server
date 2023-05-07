@@ -13,6 +13,21 @@ Provides random sensor-like data
 * weather
   * Get weather data periodically from Darksky API
 
+## Installation
+
+```sh
+asdf install
+npm install
+npm run dev
+```
+
+```sh
+# fetch sensors
+curl localhost:3000/api/sensor
+# fetch single sensor data
+curl localhost:3000/api/sensor/abba5
+```
+
 ### REST API
 ```
 GET /api/sensor
