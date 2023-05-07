@@ -6,8 +6,8 @@
 
 <body>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/2.3.0/superagent.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/7.8.1/rxjs.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/8.0.9/superagent.min.js"></script>
 
     <script>
 
@@ -15,13 +15,13 @@
 
         class ReactiveService {
             constructor() {
-                this.subject = new Rx.Subject();
+                this.subject = new rxjs.Subject();
 
                 setInterval(() => {
                     request
-                        .get('http://dummy-sensors.azurewebsites.net/api/sensor/iddqd')
+                        .get('http://localhost:3000/api/sensor/iddqd')
                         .end((err, resp) => {
-                            this.subject.onNext(resp.body);
+                            this.subject.next(resp.body);
                         });
                 }, 2000);
             }
