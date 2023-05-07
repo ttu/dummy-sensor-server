@@ -14,7 +14,7 @@
   "author": "Tomi Tuhkanen",
   "license": "ISC",
   "devDependencies": {
-    "chai": "^3.5.0",
+    "chai": "^4.3.7",
     "eslint": "^8.23.1",
     "mocha": "^10.2.0",
     "nodemon": "^2.0.22"
@@ -25,6 +25,6 @@
     "json-middleware": "^1.0.2",
     "morgan": "^1.7.0",
     "socket.io": "^4.6.1",
-    "superagent": "^3.0.0"
+    "superagent": "^8.0.9"
   }
 }
