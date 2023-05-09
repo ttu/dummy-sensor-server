@@ -68,3 +68,14 @@ When sensor has updated data emit message with sensor's id
 * Listen selected sensor's data with socket.io
 * Buffer data with RxJS and reduce buffer to single item
 * Visualize to C3-chart
+
+
+## Depolyment
+
+Deploy to fly.io.
+
+  1. Install [flyctl](https://fly.io/docs/hands-on/install-flyctl/)
+  1. Deploy app
+  ```sh
+  fly launch
+  ```
